@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Inversiones Inclusivo - Banco Provincia</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #41c24a 10%, #279d2e 10%);
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .presentation-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .slide {
+            min-height: 100vh;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            border-bottom: 3px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            margin-bottom: 20px;
+            border-radius: 20px;
+        }
+
+        .slide h1 {
+            font-size: 3rem;
+            margin-bottom: 30px;
+            background: linear-gradient(45deg, white, black);
+            background-clip: text;
+            text-align: center;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            margin: 30px 0;
+            font-weight: bold;
+        }
+
+        .slide h2 {
+            font-size: 2.5rem;
+            margin-bottom: 25px;
+            color: whitesmoke;
+            text-align: center;
+            border-bottom: 2px solid #FFD700;
+            padding-bottom: 15px;
+        }
+
+        .slide h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: white;
+            border-left: 4px solid #FFD700;
+            padding-left: 15px;
+        }
+
+        .slide p,
+        .slide li {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .slide ul {
+            padding-left: 30px;
+            margin-bottom: 20px;
+        }
+
+        .slide li {
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .slide li::marker {
+            color: #FFD700;
+        }
+
+        .highlight {
+            background: linear-gradient(45deg, #FFD700, rgba(255, 165, 0, 0.3));
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            color: #1e3c72;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: #FFD700;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #FFD700;
+            display: block;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 5px solid #FFD700;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        .feature-card h4 {
+            color: #FFD700;
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+        }
+
+        .mockup {
+            background: rgba(255, 255, 255, 0.95);
+            color: #333;
+            padding: 30px;
+            border-radius: 20px;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .mockup h4 {
+            color: #1e3c72;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .simulation-example {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px dashed #1e3c72;
+            margin: 15px 0;
+        }
+
+        .timeline {
+            position: relative;
+            margin: 30px 0;
+        }
+
+        .timeline-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 5px solid #FFD700;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -12px;
+            top: 25px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #FFD700;
+        }
+
+        .benefits-section {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .benefit-column {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .slide-number {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            background: rgba(255, 215, 0, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .logo-space {
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #FFD700;
+        }
+
+        .cta-section {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            color: #1e3c72;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            margin: 30px 0;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 20px;
+            }
+
+            .slide h1 {
+                font-size: 2rem;
+            }
+
+            .slide h2 {
+                font-size: 1.8rem;
+            }
+
+            .benefits-section {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="presentation-container">
+
+        <!-- Slide 1: Portada -->
+        <div class="slide">
+            <div class="logo-space">BP</div>
+            <div class="slide-number">1/18</div>
+            <h1>Simulador de Inversiones Inclusivo</h1>
+            <div style="text-align: center; margin: 40px 0;">
+                <p style="font-size: 1.5rem; color: rgb(42, 42, 32); margin-bottom: 20px;">
+                    <span class="highlight">Cuenta DNI</span> • <span class="highlight">Educación Financiera</span> •
+                    <span class="highlight">Inclusión Social</span>
+                </p>
+                <p style="font-size: 1.3rem; opacity: 0.8;">
+                    Concurso de Innovación Financiera<br>
+                    <strong>Banco Provincia - Provincia NET</strong>
+                </p>
+            </div>
+            <div>
+                <h3 style="margin: 0;">Democratizando las inversiones para todos los bonaerenses</h3>
+            </div>
+        </div>
+
+        <!-- Slide 2: El Problema -->
+        <div class="slide">
+            <div class="logo-space">BP</div>
+            <div class="slide-number">2/18</div>
+            <h2>El Problema que Resolvemos</h2>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">73%</span>
+                    <p>de los argentinos no invierte por <strong>desconocimiento</strong></p>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">85%</span>
+                    <p>teme <strong>perder dinero</strong> en inversiones</p>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">2.8M</span>
+                    <p>usuarios de Cuenta DNI <strong>sin productos de inversión</strong></p>
+                </div>
+            </div>
+
+            <h3>Barreras Identificadas</h3>
+            <ul>
+                <li><strong>Falta de educación financiera:</strong> Los usuarios no comprenden cómo funcionan los
+                    productos de inversión</li>
+                <li><strong>Miedo al riesgo:</strong> Temor a perder dinero por desconocimiento</li>
+                <li><strong>Complejidad percibida:</strong> Los productos se ven como "solo para expertos"</li>
+                <li><strong>Falta de experiencia práctica:</strong> No hay forma segura de "probar" antes de invertir
+                </li>
+            </ul>
+        </div>
+
+        <!-- Slide 3: Nuestra Solución -->
+        <div class="slide">
+            <div class="logo-space">BP</div>
+            <div class="slide-number">3/18</div>
+            <h2>Nuestra Solución</h2>
+
+            <div class="cta-section">
+                <h1 style="font-size: 2.2rem; margin: 0;">Simulador de Inversiones Inclusivo</h1>
+                <p style="font-size: 1.3rem; margin-top: 15px;">Integrado directamente en Cuenta DNI</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h4>🎯 Aprender Haciendo</h4>
+                    <p>Simula inversiones reales sin riesgo económico</p>
+                </div>
+                <div class="feature-card">
+                    <h4>💡 Educación Práctica</h4>
+                    <p>Tutoriales simples con casos reales</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🔄 Conversión Directa</h4>
+                    <p>Un clic para pasar de simulación a inversión real</p>
+                </div>
+                <div class="feature-card">
+                    <h4>📊 Comparación Inteligente</h4>
+                    <p>Compara productos con el mismo monto</p>
+                </div>
+            </div>
+
+            <p style="text-align: center; font-size: 1.4rem; margin-top: 30px;">
+                <span class="highlight">Resultado: Usuarios más informados = Más inversiones reales</span>
+            </p>
+        </div>
+
+        <!-- Slide 4: Productos a Simular -->
+        <div class="slide">
+            <div class="logo-space">BP</div>
+            <div class="slide-number">4/18</div>
+            <h2>Productos del Banco a Simular</h2>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h4>💰 Plazos Fijos Tradicionales</h4>
+                    <ul>
+                        <li>Diferentes plazos (30, 60, 90, 180 días)</li>
+                        <li>Tasas actualizadas en tiempo real</li>
+                        <li>Simulación de reinversión automática</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h4>📈 Plazos Fijos UVA</h4>
+                    <ul>
+                        <li>Protección contra inflación</li>
+                        <li>Comparación con inflación histórica</li>
+                        <li>Proyección de poder adquisitivo</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h4>📊 Fondos Comunes de Inversión</h4>
+                    <ul>
+                        <li>FCI Money Market</li>
+                        <li>FCI Renta Fija</li>
+                        <li>Simulación con rendimientos históricos</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h4>🎯 Metas de Ahorro</h4>
+                    <ul>
+                        <li>Objetivos personalizados</li>
+                        <li>Ahorro programado mensual</li>
+                        <li>Seguimiento de progreso</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="cta-section">
+                <p><strong>Solo productos reales de Banco Provincia</strong> - Garantizamos coherencia y confianza</p>
+            </div>
+        </div>
+
+        <!-- Slide 5: Funcionalidad Principal -->
+        <div class="slide">
+            <div class="logo-space">BP</div>
+            <div class="slide-number">5/18</div>
+            <h2>Simulación Interactiva</h2>
+
+            <div class="mockup">
+                <h4>Ejemplo de Simulación</h4>
+                <div class="simulation-example">
+                    <p><strong>Usuario ingresa:</strong> $100.000 por 90 días</p>
+                    <div style="margin: 15px 0; padding: 15px; background: #e8f4fd; border-radius: 8px;">
+                        <p><strong>Resultados instantáneos:</strong></p>
+                        <ul style="margin-left: 20px;">
+                            <li><strong>Plazo Fijo:</strong> $108.500 (8.5% anual) - Ganancia: $8.500</li>
+                            <li><strong>Plazo Fijo UVA:</strong> $106.200 + inflación - Ganancia real estimada</li>
+                            <li><strong>FCI Renta Fija:</strong> $104.800 (variable) - Riesgo bajo</li>
+                        </ul>
+                    </div>
+                    <p style="color: #1e3c72; font-weight: bold;">
+                        💡 "Con un plazo fijo ganarías $8.500 en 3 meses. ¿Te parece poco? Son 2 pizzas familiares 🍕"
+                    </p>
+                </div>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h4>🔢 Cálculo Instantáneo</h4>
+                    <p>Resultados inmediatos al ingresar monto y plazo</p>
+                </div>
+                <div class="feature-card">
+                    <h4>⚖️ Comparación Visual</h4>
+                    <p>Gráficos simples mostrando diferencias</p>
+                </div>
+                <div class="feature-card">
+                    <h4>💬 Lenguaje Cercano</h4>
+                    <p>Explicaciones en términos cotidianos</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Modo Aprendizaje -->
+        <div class="slide">
+            <div class="logo-space">BP</div>
+            <div class="slide-number">6/18</div>
+            <h2>Modo Aprendizaje</h2>
+
+            <h3>📚 Tutoriales Integrados</h3>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h4>¿Qué es un Plazo Fijo?</h4>
+                    <p>Explicación simple: "Es como una alcancía que te paga por no tocarla"</p>
+                </div>
+                <div class="feature-card">
+                    <h4>UVA vs Tradicional</h4>
+                    <p>"El UVA te protege si suben los precios de las cosas"</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Fondos Comunes</h4>
+                    <p>"Tu plata se junta con la de otros para invertir mejor"</p>
+                </div>
+            </div>
+
+            <h3>🎯 Casos Prácticos Reales</h3>
+            <ul>
+                <li><strong>Aguinaldo:</strong> "¿Qué pasaba si invertías tu aguinaldo de junio hasta diciembre?"</li>
+                <li><strong>Ahorro mensual:</strong> "Si ahorras $10.000 por mes, ¿cuánto tendrías en un año?"</li>
+                <li><strong>Meta específica:</strong> "¿Cuánto necesitas ahorrar mensualmente para unas vacaciones de
+                    $500.000?"</li>
+            </ul>
+
+            <div class="cta-section">
+                <p><strong>Objetivo:</strong> Que cualquier persona entienda las inversiones en menos de 5 minutos</p>
+            </div>
+        </div>
+
+        <!-- Slide 7: Gamificación -->
+        <div class="slide">
+            <div class="logo-space">BP</div>
+            <div class="slide-number">7/18</div>
+            <h2>Gamificación Opcional</h2>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h4>🏆 Sistema de Insignias</h4>
+                    <ul>
+                        <li>"Primer Simulador" - Primera simulación</li>
+                        <li>"Comparador" - Compara 3 productos</li>
+                        <li>"Estratega" - Simula diferentes plazos</li>
+                        <li>"Graduado" - Completa todos los tutoriales</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h4>📊 Desafíos Semanales</h4>
+                    <ul>
+                        <li>"¿Cuál fue la mejor inversión del mes?"</li>
+                        <li>"Simula tu gasto de supermercado"</li>
+                        <li>"Planifica tu próximo viaje"</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h4>🎮 Simulaciones Históricas</h4>
+                    <ul>
+                        <li>"¿Qué pasaba en 2023 con la inflación?"</li>
+                        <li>"Viaje en el tiempo: tus $50.000 hace 6 meses"</li>
+                        <li>"El poder del interés compuesto en 5 años"</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mockup">
+                <h4>Ejemplo de Desafío</h4>
+                <div class="simulation-example">
+                    <p><strong>🎯 Desafío de la Semana:</strong></p>
+                    <p>"Tu amigo dice que guardar plata debajo del colchón es mejor que invertir. ¿Podés demostrarle que
+                        está equivocado?"</p>
+                    <p><strong>Misión:</strong> Simula $50.000 guardados vs invertidos en un plazo fijo por 1 año</p>
+                </div>
+            </div>
+
+            <p style="text-align: center; font-style: italic; margin-top: 30px;">
+                <span class="highlight">La gamificación es opcional - se activa solo si el usuario quiere</span>
+            </p>
+        </div>
+
+        <!-- Slide 8: Conversión a Real -->
+        <div class="slide">
+            <div class="logo-space">BP</div>
+            <div class="slide-number">8/18</div>
+            <h2>Conversión a Inversión Real</h2>
+
+            <div class="mockup">
+                <h4>Flujo de Conversión Simplificado</h4>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <strong>1. Usuario simula</strong><br>
+                        "Me gusta este plazo fijo de $50.000 por 60 días"
+                    </div>
+                    <div class="timeline-item">
+                        <strong>2. Botón de acción</strong><br>
+                        "¿Querés hacer esta inversión de verdad ahora?"
+                    </div>
+                    <div class="timeline-item">
+                        <strong>3. Validaciones</strong><br>
+                        Verifica saldo, confirma términos y condiciones
+                    </div>
+                    <div class="timeline-item">
+                        <strong>4. Inversión real</strong><br>
+                        Se ejecuta con los mismos parámetros simulados
+                    </div>
+                </div>
+            </div>
+
+            <h3>💡 Ventajas del Flujo Integrado</h3>
+            <ul>
+                <li><strong>Sin fricción:</strong> El usuario ya decidió, solo confirma</li>
+                <li><strong>Confianza:</strong> Ya vió exactamente lo que va a pasar</li>
+                <li><strong>Simplicidad:</strong> No tiene que volver a cargar datos</li>
+                <li><strong>Inmediatez:</strong> Aprovecha el momento de decisión</li>
+            </ul>
+
+            <div class="cta-section">
+                <p><strong>Resultado esperado:</strong> 40% más conversión desde simulaciones vs flujo tradicional</p>
+            </div>
+        </div>
+
+        <!-- Slide 9: Canales de Implementación -->
+        <div class="slide">
+            <div class="logo-space">BP</div>
+            <div class="slide-number">9/18</div>
+            <h2>Canales de Implementación</h2>
+
+            <div class="benefits-section">
+                <div class="benefit-column">
+                    <h3>🎯 Cuenta DNI (Principal)</h3>
+                    <ul>
+                        <li><strong>3+ millones de usuarios activos</strong></li>
+                        <li>Máximo impacto social e inclusión</li>
+                        <li>Usuarios de todos los niveles socioeconómicos</li>
+                        <li>Canal estrella del banco</li>
+                    </ul>
+                    <p><strong>Ubicación:</strong> Menú "Inversiones" → "Simulá tu inversión"</p>
+                </div>
+
+                <div class="benefit-column">
+                    <h3>💼 Home Banking BIP</h3>
+                    <ul>
+                        <li>Usuarios con más experiencia bancaria</li>
+                        <li>Funciones avanzadas y gráficos detallados</li>
+                        <li>Ideal para simulaciones complejas</li>
+                    </ul>
+                    <p><strong>Ubicación:</strong> Sección "Inversiones" → pestaña "Simulador"</p>
+                </div>
+            </div>
+
+            <div class="benefit-column" style="margin-top: 20px;">
+                <h3>🏪 Cuenta DNI Comercios</h3>
+                <ul>
+                    <li>Enfoque en rendimiento de saldos comerciales</li>
+                    <li>Simulaciones de ahorro de recaudación</li>
+                    <li>Educación financiera para PyMEs</li>
+                </ul>
+                <p><strong>Ubicación:</strong> "Saldo e Inversiones" → "Simular ahorro de tu recaudación"</p>
+            </div>
+
+            <div class="cta-section" style="margin-top: 30px;">
+                <p><strong>Estrategia:</strong> Lanzar primero en Cuenta DNI, luego expandir según adopción</p>
+            </div>
+        </div>
+
+        <!-- Slide 10: Beneficios para el Banco -->
+        <div class="slide">
+            <div class="logo-space">BP</div>
+            <div class="slide-number">10/18</div>
+            <h2>Beneficios para Banco Provincia</h2>
+
+            <div class="benefits-section">
+                <div class="benefit-column">
+                    <h3>💰 Impacto Comercial</h3>
+                    <ul>
+                        <li><strong>Aumento en colocaciones:</strong> +30% en productos de inversión</li>
+                        <li><strong>Retención de clientes:</strong> Usuarios más educados permanecen más</li>
+                        <li><strong>Cross-selling natural:</strong> Del simulador a otros productos</li>
+                        <li><strong>Reducción de consultas:</strong> Menos llamadas al call center</li>
+                    </ul>
+                </div>
+
+                <div class="benefit-column">
+                    <h3>🌍 Impacto Social</h3>
+                    <ul>
+                        <li><strong>Educación financiera masiva:</strong> Llegada a sectores no bancarizados</li>
+                        <li><strong>Inclusión generacional:</strong> Atractivo para jóvenes y adultos mayores</li>
+                        <li><strong>Democratización:</strong> Inversiones accesibles para todos</li>
+                        <li><strong>Responsabilidad social:</strong> Herramienta educativa gratuita</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">40%</span>
+                    <p>Aumento proyectado en <strong>conversión a inversiones reales</strong></p>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">25%</span>
+                    <p>Reducción en <strong>consultas de soporte</strong> sobre productos</p>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">60%</span>
+                    <p>Mejora en <strong>confianza del usuario</strong> hacia inversiones</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Diferenciación -->
+        <div class="slide">
+            <div class="logo-space">BP</div>
+            <div class="slide-number">11/18</div>
+            <h2>¿Qué nos Diferencia?</h2>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h4>🎯 Solo Productos Reales del Banco</h4>
+                    <p>A diferencia de simuladores genéricos, solo mostramos productos que el usuario puede contratar
+                        inmediatamente</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>📱 Integración Nativa</h4>
+                    <p>No es una app separada, está dentro de Cuenta DNI donde ya están los usuarios</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>🔄 Conversión Directa</h4>
+                    <p>Un solo clic para pasar de simulación a inversión real, sin fricción</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>💬 Lenguaje Inclusivo</h4>
+                    <p>Explicaciones en términos cotidianos, sin jerga financiera</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>🎮 Gamificación Opcional</h4>
+                    <p>El usuario elige si quiere la experiencia gamificada o simple</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>🌍 Alcance Masivo</h4>
+                    <p>3+ millones de usuarios potenciales desde el día 1</p>
+                </div>
+            </div>
+
+            <div class="cta-section">
+                <h3 style="margin: 0;">Primera herramienta de educación financiera masiva integrada en una billetera
+                    digital provincial</h3>
+            </div>
+        </div>
+
+        <!-- Slide 12: Arquitectura Técnica -->
+        <div class="slide">
+            <div class="logo-space">BP</div>
+            <div class="slide-number">12/18</div>
+            <h2>Arquitectura Técnica</h2>
+
+            <div class="mockup">
+                <h4>Stack Tecnológico Propuesto</h4>
+                <div class="features-grid" style="margin: 20px 0;">
+                    <div class="feature-card">
+                        <h4>🔧 Backend</h4>
+                        <ul>
+                            <li>API REST integrada a core bancario</li>
+                            <li>Conexión en tiempo real con tasas</li>
+                            <li>Cálculos de rentabilidad automatizados</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <h4>📱 Frontend</h4>
+                        <ul>
+                            <li>Módulo nativo en Cuenta DNI</li>
+                            <li>Interfaz responsive y accesible</li>
+                            <li>Gráficos interactivos simples</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <h4>📊 Datos</h4>
+                        <ul>
+                            <li>Histórico de rendimientos reales</li>
+                            <li>Índices de inflación (INDEC)</li>
+                            <li>Analytics de uso y conversión</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <h3>🔌 Integraciones Requeridas</h3>
+            <ul>
+                <li><strong>Core bancario:</strong> Para tasas actualizadas y validación de saldos</li>
+                <li><strong>Sistema de inversiones:</strong> Para ejecutar operaciones reales</li>
+                <li><strong>CRM:</strong> Para tracking de conversiones y seguimiento</li>
+                <li><strong>Sistema de notificaciones:</strong> Para tips y recordatorios educativos</li>
+            </ul>
+
+            <div class="cta-section">
+                <p><strong>Ventaja:</strong> Reutiliza infraestructura existente del banco, minimizando costos y riesgos
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 13: MVP y Fases -->
+        <div class="slide">
+            <div class="logo-space">BP</div>
+            <div class="slide-number">13/18</div>
+            <h2>Plan de Implementación por Fases</h2>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h4>📱 Fase 1: MVP (3 meses)</h4>
+                    <ul>
+                        <li>Simulador básico de plazos fijos tradicionales</li>
+                        <li>Integración en Cuenta DNI</li>
+                        <li>Conversión directa a inversión real</li>
+                        <li>Lanzamiento con 10% de usuarios (A/B testing)</li>
+                    </ul>
+                </div>
+
+                <div class="timeline-item">
+                    <h4>🚀 Fase 2: Expansión (6 meses)</h4>
+                    <ul>
+                        <li>Plazos fijos UVA y FCI básicos</li>
+                        <li>Modo aprendizaje con tutoriales</li>
+                        <li>Comparador de productos</li>
+                        <li>Lanzamiento completo en Cuenta DNI</li>
+                    </ul>
+                </div>
+
+                <div class="timeline-item">
+                    <h4>⭐ Fase 3: Optimización (9 meses)</h4>
+                    <ul>
+                        <li>Gamificación opcional</li>
+                        <li>Metas de ahorro personalizadas</li>
+                        <li>Integración en BIP y Comercios</li>
+                        <li>Analytics avanzados y personalización</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">3</span>
+                    <p>meses para <strong>MVP funcional</strong></p>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">100K</span>
+                    <p>usuarios objetivo en <strong>primera fase</strong></p>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">9</span>
+                    <p>meses para <strong>producto completo</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 14: Casos de Uso Reales -->
+        <div class="slide">
+            <div class="logo-space">BP</div>
+            <div class="slide-number">14/18</div>
+            <h2>Casos de Uso Reales</h2>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h4>👨‍🎓 Estudiante - 22 años</h4>
+                    <p><strong>Situación:</strong> Recibe $50.000 de regalo de graduación</p>
+                    <p><strong>Uso del simulador:</strong> Compara qué le conviene más para comprarse una moto en 6
+                        meses</p>
+                    <p><strong>Resultado:</strong> Elige plazo fijo UVA y gana $8.000 reales</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>👵 Jubilada - 68 años</h4>
+                    <p><strong>Situación:</strong> Quiere que su jubilación "rinda más"</p>
+                    <p><strong>Uso del simulador:</strong> Aprende sobre plazos fijos con tutoriales simples</p>
+                    <p><strong>Resultado:</strong> Invierte $30.000 mensuales en plazo fijo renovable</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>🏪 Comerciante - 45 años</h4>
+                    <p><strong>Situación:</strong> Acumula $200.000 en su cuenta comercial</p>
+                    <p><strong>Uso del simulador:</strong> Ve cuánto pierde dejando la plata sin invertir</p>
+                    <p><strong>Resultado:</strong> Invierte en FCI conservador con alta liquidez</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>👨‍👩‍👧‍👦 Familia - 35 años</h4>
+                    <p><strong>Situación:</strong> Planifica las vacaciones del próximo verano</p>
+                    <p><strong>Uso del simulador:</strong> Calcula cuánto ahorrar mensualmente para $400.000</p>
+                    <p><strong>Resultado:</strong> Crea meta de ahorro automático</p>
+                </div>
+            </div>
+
+            <div class="cta-section">
+                <p><strong>Objetivo común:</strong> Convertir a usuarios que nunca invirtieron en inversores regulares
+                    del banco</p>
+            </div>
+        </div>
+
+        <!-- Slide 15: Métricas de Éxito -->
+        <div class="slide">
+            <div class="logo-space">BP</div>
+            <div class="slide-number">15/18</div>
+            <h2>Métricas de Éxito</h2>
+
+            <div class="benefits-section">
+                <div class="benefit-column">
+                    <h3>📊 Métricas de Adopción</h3>
+                    <ul>
+                        <li><strong>Usuarios únicos mensuales:</strong> Meta 200K en 6 meses</li>
+                        <li><strong>Simulaciones por usuario:</strong> Promedio 3.5 por mes</li>
+                        <li><strong>Tiempo en funcionalidad:</strong> 8+ minutos promedio</li>
+                        <li><strong>Retención:</strong> 60% regresa en 30 días</li>
+                    </ul>
+                </div>
+
+                <div class="benefit-column">
+                    <h3>💰 Métricas de Conversión</h3>
+                    <ul>
+                        <li><strong>Tasa de conversión:</strong> 15% de simulaciones se vuelven inversiones reales</li>
+                        <li><strong>Monto promedio invertido:</strong> $85.000 por conversión</li>
+                        <li><strong>Nuevos inversores:</strong> 5.000 usuarios/mes que nunca invirtieron</li>
+                        <li><strong>Crecimiento en colocaciones:</strong> +25% en productos simulados</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">$850M</span>
+                    <p>Nuevas colocaciones proyectadas en <strong>primer año</strong></p>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">30K</span>
+                    <p>Nuevos inversores captados <strong>anualmente</strong></p>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">4.8/5</span>
+                    <p>Calificación objetivo en <strong>satisfacción de usuario</strong></p>
+                </div>
+            </div>
+
+            <p style="text-align: center; margin-top: 30px; font-style: italic;">
+                <span class="highlight">ROI proyectado: 380% en el primer año de operación completa</span>
+            </p>
+        </div>
+
+        <!-- Slide 16: Inversión Requerida -->
+        <div class="slide">
+            <div class="logo-space">BP</div>
+            <div class="slide-number">16/18</div>
+            <h2>Inversión y Recursos</h2>
+
+            <div class="benefits-section">
+                <div class="benefit-column">
+                    <h3>💻 Desarrollo Tecnológico</h3>
+                    <ul>
+                        <li><strong>Equipo:</strong> 4 desarrolladores + 1 UX/UI + 1 PM</li>
+                        <li><strong>Tiempo MVP:</strong> 3 meses</li>
+                        <li><strong>Costo estimado:</strong> $25M (desarrollo + testing)</li>
+                        <li><strong>Infraestructura:</strong> Utiliza servidores existentes</li>
+                    </ul>
+                </div>
+
+                <div class="benefit-column">
+                    <h3>📈 Marketing y Lanzamiento</h3>
+                    <ul>
+                        <li><strong>Campaña de lanzamiento:</strong> $8M</li>
+                        <li><strong>Capacitación interna:</strong> $2M</li>
+                        <li><strong>Material educativo:</strong> $3M</li>
+                        <li><strong>Mantenimiento anual:</strong> $5M</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">$43M</span>
+                    <p>Inversión total <strong>primer año</strong></p>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">$160M</span>
+                    <p>Retorno proyectado <strong>primer año</strong></p>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">8</span>
+                    <p>meses para <strong>punto de equilibrio</strong></p>
+                </div>
+            </div>
+
+            <div class="cta-section">
+                <p><strong>Ventaja competitiva:</strong> Inversión 60% menor que desarrollar una app independiente</p>
+            </div>
+        </div>
+
+        <!-- Slide 17: Riesgos y Mitigación -->
+        <div class="slide">
+            <div class="logo-space">BP</div>
+            <div class="slide-number">17/18</div>
+            <h2>Riesgos y Mitigación</h2>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h4>⚠️ Riesgo: Baja Adopción Inicial</h4>
+                    <p><strong>Mitigación:</strong></p>
+                    <ul>
+                        <li>Lanzamiento gradual con A/B testing</li>
+                        <li>Incentivos para primeros usuarios</li>
+                        <li>Campaña educativa previa al lanzamiento</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h4>⚠️ Riesgo: Complejidad Técnica</h4>
+                    <p><strong>Mitigación:</strong></p>
+                    <ul>
+                        <li>MVP con funcionalidades básicas</li>
+                        <li>Reutilizar APIs existentes del banco</li>
+                        <li>Desarrollo iterativo y pruebas constantes</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h4>⚠️ Riesgo: Resistencia al Cambio</h4>
+                    <p><strong>Mitigación:</strong></p>
+                    <ul>
+                        <li>Capacitación intensiva al equipo comercial</li>
+                        <li>Comunicación clara de beneficios</li>
+                        <li>Feedback continuo de usuarios</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h4>⚠️ Riesgo: Expectativas Erróneas</h4>
+                    <p><strong>Mitigación:</strong></p>
+                    <ul>
+                        <li>Disclaimers claros sobre rendimientos</li>
+                        <li>Educación sobre riesgos de inversión</li>
+                        <li>Simulaciones con datos históricos reales</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="cta-section">
+                <p><strong>Factor de éxito clave:</strong> Lanzamiento gradual con aprendizaje continuo y ajustes
+                    rápidos</p>
+            </div>
+        </div>
+
+        <!-- Slide 18: Conclusión -->
+        <div class="slide">
+            <div class="logo-space">BP</div>
+            <div class="slide-number">18/18</div>
+            <h1>¡Democraticemos las Inversiones!</h1>
+
+            <div class="features-grid" style="margin: 40px 0;">
+                <div class="feature-card">
+                    <h4>🎯 Impacto Social</h4>
+                    <p>3+ millones de bonaerenses con acceso a educación financiera gratuita</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>💰 Impacto Comercial</h4>
+                    <p>+$850M en nuevas colocaciones y 30K nuevos inversores anuales</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>🚀 Innovación</h4>
+                    <p>Primera herramienta de simulación integrada en billetera digital provincial</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>⭐ Diferenciación</h4>
+                    <p>Posiciona a Banco Provincia como líder en inclusión financiera digital</p>
+                </div>
+            </div>
+
+            <div class="cta-section" style="margin: 50px 0;">
+                <h2 style="margin-bottom: 20px;">"De la simulación a la inversión real en un solo click"</h2>
+                <p style="font-size: 1.4rem;"><strong>Simulador de Inversiones Inclusivo</strong><br>
+                    La herramienta que convertirá a Cuenta DNI en la mayor plataforma de educación financiera de
+                    Argentina</p>
+            </div>
+
+            <div style="text-align: center; margin-top: 50px;">
+                <p style="font-size: 1.1rem; opacity: 0.8;">
+                    <strong>Concurso de Innovación Financiera</strong><br>
+                    Banco Provincia - Provincia NET<br>
+                    Septiembre 2025
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
